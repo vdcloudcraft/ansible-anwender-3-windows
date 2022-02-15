@@ -1,0 +1,32 @@
+---
+network_shares:
+  
+  shares:
+  - share_name: &logs logs
+    path: "{{ paths.log }}"
+    list: yes
+  - share_name: &backups backups
+    path: "{{ paths.backup }}"
+  
+  permissions:
+    full:
+    - user: Administrators
+      shares:
+      - *backups
+      - *logs
+    - user: DOMAIN\dba
+      shares:
+      - *backups
+      - *logs
+
+    change: []
+
+    read:
+    - user: DOMAIN\monitoring
+      shares:
+      - *logs
+    - user: DOMAIN\backupservice
+      shares:
+      - *backups
+
+    deny: []

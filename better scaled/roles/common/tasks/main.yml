@@ -1,0 +1,30 @@
+---
+- name: Create firewall rules
+  win_firewall_rule:
+    name: "{{ item.name }}"
+    localport: "{{ item.localport }}"
+    action: "{{ item.action }}"
+    direction: "{{ item.direction }}"
+    protocol: "{{ item.protocol }}"
+    profiles: "{{ item.profiles }}"
+    state: "{{ item.state | default('present') }}"
+    enabled: "{{ item.enabled | default('yes') }}"
+  loop: "{{ firewall_rules | default([]) }}"
+
+- name: Set user rights
+  include_tasks: set-user-rights.yml
+
+- name: Create directories
+  win_file:
+    path: "{{ item }}"
+    state: directory
+  loop: "{{ paths.values() | list | default([]) }}"
+
+- name: Create network shares
+  include_tasks: create-shares.yml
+
+- name: Install packages
+  include_tasks: install-packages.yml
+  vars:
+    package: "{{ item }}"
+  loop: "{{ packages | default([]) }}"

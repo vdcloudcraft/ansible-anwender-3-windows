@@ -1,0 +1,5 @@
+---
+paths:
+  backup: F:\backups
+  download: F:\download
+  log: D:\logs

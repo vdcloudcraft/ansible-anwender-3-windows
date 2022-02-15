@@ -1,0 +1,20 @@
+---
+- name: Map users to rights
+  set_fact:
+    available_rights:
+      "{{ available_rights | default([]) + item.rights }}"
+  loop: "{{ user_rights }}"
+
+- name: Set user rights
+  win_user_rights:
+    name: "{{ right.name }}"
+    users: "{{ right.users }}"
+  vars:
+    right:
+      name: "{{ item }}"
+      users: 
+        "{{ user_rights
+          | selectattr('rights', 'contains', item)
+          | map(attribute='user')
+          | list }}"
+  loop: "{{ available_rights | default([]) | unique }}"

@@ -1,0 +1,7 @@
+---
+artifactory_url: https://artifactory.example.de
+
+backup_path: F:\backups
+download_path: F:\download
+log_path: D:\logs
+

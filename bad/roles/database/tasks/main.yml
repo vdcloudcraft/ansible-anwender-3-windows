@@ -1,0 +1,80 @@
+---
+- name: DB firewall rule
+  win_firewall_rule:
+    name: Postgres
+    localport: 5432
+    action: allow
+    direction: in
+    protocol: tcp
+    profiles: private
+    state: present
+    enabled: yes
+
+- name: RDP firewall rule
+  win_firewall_rule:
+    name: Remote Desktop
+    localport: 3389
+    action: allow
+    direction: in
+    protocol: tcp
+    profiles: private
+    state: present
+    enabled: yes
+
+- name: Create log folder
+  win_file:
+    path: "{{ log_path }}"
+    state: directory
+
+- name: Create backup folder
+  win_file:
+    path: "{{ backup_path }}"
+    state: directory
+
+- name: Create download folder
+  win_file:
+    path: "{{ download_path }}"
+    state: directory
+
+- name: Create log folder
+  win_file:
+    path: "{{ log_path }}"
+    state: directory
+    
+- name: Add log share
+  win_share:
+    name: logs
+    path: "{{ log_path }}"
+    list: yes
+    full: Administrators,DOMAIN\dba
+    read: DOMAIN\monitoring
+
+    
+- name: Add log share
+  win_share:
+    name: backups2
+    path: "{{ backup2_path }}"
+    list: yes
+    full: Administrators,DOMAIN\dba
+    read: DOMAIN\monitoring
+
+- name: Add backup share
+  win_share:
+    name: backups
+    path: "{{ backup_path }}"
+    list: no
+    full: Administrators,DOMAIN\dba
+    read: DOMAIN\backupservice
+
+- name: Download DB software
+  win_get_url:
+    url: "{{ artifactory_url }}/packages/db/db.exe"
+    dest: "{{ download_path }}\\db.exe"
+
+- name: Install DB software
+  win_package:
+    path: "{{ download_path }}\\db.exe"
+    product_id: db
+    arguments:
+    - --quiet
+    - --wait

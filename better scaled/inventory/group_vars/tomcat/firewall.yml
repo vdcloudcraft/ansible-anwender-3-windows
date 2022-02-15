@@ -1,0 +1,16 @@
+---
+firewall_rules:
+
+- name: Postgres
+  localport: 5432
+  action: allow
+  direction: in
+  protocol: tcp
+  profiles: private
+
+- name: Remote Desktop
+  localport: 3389
+  action: allow
+  direction: in
+  protocol: tcp
+  profiles: private

@@ -1,0 +1,14 @@
+---
+- name: Download {{ package.filename }}
+  win_get_url:
+    url: "{{ artifactory.url }}/{{ package.artifactory_path }}/{{ package.filename }}"
+    url_username: "{{ artifactory.user }}"
+    url_password: "{{ artifactory.password }}"
+    force_basic_auth: yes
+    dest: "{{ paths.download }}\\{{ package.filename }}"
+
+- name: Install {{ package.filename }}
+  win_package:
+    path: "{{ paths.download }}\\{{ package.filename }}"
+    product_id: "{{ package.install.product_id }}"
+    arguments: "{{ package.install.arguments }}"

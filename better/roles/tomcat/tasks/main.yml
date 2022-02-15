@@ -1,0 +1,7 @@
+---
+- name: Deploy tomcat properties
+  win_template:
+    src: tomcat.properties.j2
+    dest: "{{ tomcat_properties.dest }}"
+  vars:
+    template_properties: "{{ tomcat_properties[stage] }}"

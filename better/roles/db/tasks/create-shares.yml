@@ -1,0 +1,49 @@
+---
+- name: Create list of shares and permissions
+  set_fact:
+    shares:
+      "{{ shares | default([]) + [
+            item
+            | combine({'full': perm_full })
+            | combine({'change': perm_change })
+            | combine({'read': perm_read })
+            | combine({'deny': perm_deny })
+          ]
+      }}"
+  vars:
+    perm_full:
+      "{{ network_shares.permissions.full
+          | selectattr('shares', 'contains', item.share_name)
+          | map(attribute='user')
+          | list
+          | join(',') }}"
+    perm_change:
+      "{{ network_shares.permissions.change
+          | selectattr('shares', 'contains', item.share_name)
+          | map(attribute='user')
+          | list
+          | join(',') }}"
+    perm_read:
+      "{{ network_shares.permissions.read
+          | selectattr('shares', 'contains', item.share_name)
+          | map(attribute='user')
+          | list
+          | join(',') }}"
+    perm_deny:
+      "{{ network_shares.permissions.deny
+          | selectattr('shares', 'contains', item.share_name)
+          | map(attribute='user')
+          | list
+          | join(',') }}"
+  loop: "{{ network_shares.shares }}"
+
+- name: Create file shares
+  win_share:
+    name: "{{ item.share_name }}"
+    path: "{{ item.path }}"
+    list: "{{ item.list | default('no') }}"
+    full: "{{ item.full | default(omit) }}"
+    change: "{{ item.change | default(omit) }}"
+    read: "{{ item.read | default(omit) }}"
+    deny: "{{ item.deny | default(omit) }}"
+  loop: "{{ shares }}"

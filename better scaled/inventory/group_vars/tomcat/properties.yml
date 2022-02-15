@@ -1,0 +1,23 @@
+---
+tomcat_properties:
+  default: &default
+    generic.setting.first: 1
+    generic.setting.second: 2
+    generic.setting.third:
+    - b
+    - x
+    - 2
+
+  production:
+    <<: *default
+    prod.setting.first: 1
+    prod.setting.second: 2
+
+  development:
+    <<: *default
+    dev.setting.first: 1
+    dev.setting.second: 2
+    generic.setting.third:
+    - d
+    - x
+    - 2

@@ -1,0 +1,9 @@
+---
+#
+# Generic setup goes here
+#
+
+- name: Deploy tomcat properties
+  win_copy:
+    src: "{{ stage }}/tomcat.properties"
+    dest: F:\tomcat\tomcat.properties

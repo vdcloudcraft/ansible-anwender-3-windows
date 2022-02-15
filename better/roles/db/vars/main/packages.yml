@@ -1,0 +1,14 @@
+---
+artifactory:
+  url: https://artifactory.example.de
+  user: user
+  password: password
+
+packages:
+- filename: db.exe
+  artifactory_path: packages/db
+  install:
+    product_id: db
+    arguments:
+    - --quiet
+    - --wait
